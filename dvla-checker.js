@@ -8,6 +8,14 @@ if (!config)
 
 page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36';
 
+<<<<<<< HEAD
+=======
+page.viewportSize = {
+  width: config.width,
+  height: config.height
+};
+
+>>>>>>> ed004214871858d6aaa7da5092862928d3039a0f
 function login_callback (status) {
     if (status != "success") {
         console.log("Failure loading login page");
@@ -29,10 +37,15 @@ function post_login_callback (status) {
         return;
     }
 
+<<<<<<< HEAD
     page.render("test.png");
 
     page.evaluate(function (config) {
         document.getElementById(config.radio).checked = true;
+=======
+    page.evaluate(function (config) {
+        document.querySelector('input[type="radio"]').checked = true;
+>>>>>>> ed004214871858d6aaa7da5092862928d3039a0f
         document.querySelector(config.confirmForm).submit();
     }, config);
 

@@ -84,7 +84,7 @@ function dvlacheck_phantomjs()
 
 function dvlacheck_get_phantomjs_script()
 {
-    return realpath(dvlacheck_plugin_basename() . DIRECTORY_SEPARATOR . "dvla-checker.js");    
+    return realpath(dvlacheck_plugin_basename() . DIRECTORY_SEPARATOR . "dvla-check.js");    
 }
 
 function dvlacheck_retrieve_data()
