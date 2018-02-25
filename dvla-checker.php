@@ -61,6 +61,38 @@ function customVehiclesColumns($columns)
 
 add_filter('manage_vehicles_posts_columns', 'customVehiclesColumns');
 
+function customVehiclesColumnEntries($column_name)
+{
+
+    global $post;
+
+    if ( $column_name == 'registration_number' )
+    {
+        $registration_number = get_post_meta( $post->ID, 'registration_number', true );
+        echo $registration_number;
+    }
+
+    if ( $column_name == 'manufacturer' )
+    {
+        $manufacturer = get_post_meta( $post->ID, 'manufacturer', true );
+        echo $manufacturer;
+    }
+
+    if ( $column_name == 'first_registration' )
+    {
+        $first_registration = get_post_meta( $post->ID, 'first_registration', true );
+        echo $first_registration;
+    }
+
+    if ( $column_name == 'fuel_type' )
+    {
+        $fuel_type = get_post_meta( $post->ID, 'fuel_type', true );
+        echo $fuel_type;
+    }
+}
+
+add_filter('manage_vehicles_posts_custom_column', 'customVehiclesColumnEntries');
+
 function disableTitleSort($columns)
 {
     unset($columns['title']);
@@ -106,7 +138,7 @@ function dvlacheck_retrieve_data()
   }
 
 
-  $exec = $phantomjs . ' ' . $script . ' ' . $postcode;
+  $exec = $phantomjs . ' --ignore-ssl-errors=yes ' . $script . ' ' . $postcode;
   
   $escaped_command = escapeshellcmd($exec);
   return shell_exec($escaped_command);
@@ -122,6 +154,27 @@ function dvlacheck_input()
 }
 
 add_shortcode('dvla_input', 'dvlacheck_input');
+
+function dvlacheck_form_handler()
+{
+    if(!isset($_POST['reg_number'])) return;
+
+    $regNumber = $_POST['reg_number'];
+
+    $postOptions = [
+        'post_type' => 'vehicles',
+        'meta_input' => array(
+            'registration_number' => $regNumber,
+            'manufacturer' => 'N/A',
+            'first_registration' => 'N/A',
+            'fuel_type' => 'N/A'
+        )
+    ];
+
+    wp_insert_post($postOptions);
+}
+
+add_action('init', 'dvlacheck_form_handler');
 
 function dvlacheck_form_styles()
 {

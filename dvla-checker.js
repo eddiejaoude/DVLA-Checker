@@ -1,21 +1,14 @@
-var page = require('webpage').create(), fs = require('fs'), config = fs.exists('./config.json') ? require('./config.json') : false, system = require('system'), args = String(system.args.slice(1));
-
-if (!config)
-{
-    console.log("config.json does not exist");
-    phantom.exit();
-}
+var page = require('webpage').create(),
+    system = require('system'),
+    args = String(system.args.slice(1));
 
 page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36';
 
-<<<<<<< HEAD
-=======
 page.viewportSize = {
-  width: config.width,
-  height: config.height
+  width: 800,
+  height: 800
 };
 
->>>>>>> ed004214871858d6aaa7da5092862928d3039a0f
 function login_callback (status) {
     if (status != "success") {
         console.log("Failure loading login page");
@@ -37,17 +30,10 @@ function post_login_callback (status) {
         return;
     }
 
-<<<<<<< HEAD
-    page.render("test.png");
-
-    page.evaluate(function (config) {
-        document.getElementById(config.radio).checked = true;
-=======
-    page.evaluate(function (config) {
-        document.querySelector('input[type="radio"]').checked = true;
->>>>>>> ed004214871858d6aaa7da5092862928d3039a0f
-        document.querySelector(config.confirmForm).submit();
-    }, config);
+    page.evaluate(function () {
+        document.getElementById("Correct_True").checked = true;
+        document.querySelector('form[action="/ViewVehicle"]').submit();
+    });
 
     page.onLoadFinished = getResults;
 
@@ -91,4 +77,4 @@ function getResults (status) {
 }
 
 page.onLoadFinished = login_callback;
-page.open(config.host + "/ViewVehicle");
+page.open("https://vehicleenquiry.service.gov.uk/ViewVehicle");

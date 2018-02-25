@@ -37,7 +37,7 @@ function init()
         var xhr = new XMLHttpRequest(),
             regNumber = this.querySelector('*[name="reg_number"]').value;
 
-        xhr.open('POST', site_url + '/wp-content/plugins/dvla-checker/dvla-checker.php');
+        xhr.open('POST', site_url + '/wp-admin/admin-ajax.php');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
         xhr.onload = function()
@@ -48,9 +48,12 @@ function init()
             }
         };
 
-        xhr.send(encodeURI('reg_number=' + regNumber ));
+        xhr.send(encodeURI('action=dvlacheck_form_handler&reg_number=' + regNumber ));
 
         console.log(xhr);
+            
+        this.reset();
+
     }
 
 
