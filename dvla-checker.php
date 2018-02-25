@@ -106,6 +106,11 @@ function dvlacheck_plugin_basename()
     return plugin_basename(__FILE__);
 }
 
+function dvlacheck_plugin_dir()
+{
+    return plugin_dir_path(__FILE__);
+}
+
 function dvlacheck_phantomjs()
 {
     $path = exec('which phantomjs');
@@ -116,10 +121,10 @@ function dvlacheck_phantomjs()
 
 function dvlacheck_get_phantomjs_script()
 {
-    return realpath(dvlacheck_plugin_basename() . DIRECTORY_SEPARATOR . "dvla-check.js");    
+    return realpath(dvlacheck_plugin_dir() . "dvla-checker.js");    
 }
 
-function dvlacheck_retrieve_data()
+function dvlacheck_retrieve_data($registration)
 {
 
   $phantomjs = dvlacheck_phantomjs();
@@ -138,7 +143,7 @@ function dvlacheck_retrieve_data()
   }
 
 
-  $exec = $phantomjs . ' --ignore-ssl-errors=yes ' . $script . ' ' . $postcode;
+  $exec = $phantomjs . " --ignore-ssl-errors=yes $script '$registration'";
   
   $escaped_command = escapeshellcmd($exec);
   return shell_exec($escaped_command);
@@ -160,14 +165,24 @@ function dvlacheck_form_handler()
     if(!isset($_POST['reg_number'])) return;
 
     $regNumber = $_POST['reg_number'];
+    $carDetails = [];
+
+    $scriptResults = dvlacheck_retrieve_data($regNumber);
+
+    $scriptResults = explode("\n", $scriptResults);
+
+    $carDetails["activeMOT"] = $scriptResults[1];
+    $carDetails["manufacturer"] = $scriptResults[2];
+    $carDetails["first_registration"] = $scriptResults[3];
+    $carDetails["fuel_type"] = $scriptResults[7];
 
     $postOptions = [
         'post_type' => 'vehicles',
         'meta_input' => array(
             'registration_number' => $regNumber,
-            'manufacturer' => 'N/A',
-            'first_registration' => 'N/A',
-            'fuel_type' => 'N/A'
+            'manufacturer' => $carDetails["manufacturer"] ?: "N/A",
+            'first_registration' => $carDetails["first_registration"] ?: "N/A",
+            'fuel_type' => $carDetails["fuel_type"] ?: "N/A"
         )
     ];
 
