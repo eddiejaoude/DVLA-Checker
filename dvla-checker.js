@@ -49,20 +49,28 @@ function getResults (status) {
 
     var registrationDetails = page.evaluate(function(){
         var carInfo = [];
-        var detailItems = document.querySelectorAll('h2.heading-large, .list-summary-item');
+        var detailItems = document.querySelectorAll('.column-half, .list-summary-item');
         for (var i = 0; i < detailItems.length; i++)
         {
             if (i === detailItems.length - 1) continue;
 
             if (i > 1)
             {
+                var detailTitle = detailItems[i].getElementsByTagName("span")[0].innerText;
                 var detailValue = detailItems[i].getElementsByTagName("strong")[0].innerText.toLowerCase();
-                detailValue = detailValue.charAt(0).toUpperCase() + detailValue.substr(1);
+                detailValue = detailTitle + detailValue.charAt(0).toUpperCase() + detailValue.substr(1);
                 carInfo.push(detailValue);
                 continue;
             }
 
-            carInfo.push(detailItems[i].innerText.substr(2));
+            var headingTitle = detailItems[i].querySelector(".incorrect-status .summary").innerText;
+            headingTitle = String(headingTitle).replace(/([^\s]+)/, '');
+            headingTitle = headingTitle.trim();
+            headingTitle = headingTitle.replace("?", ":");
+
+            var headingStatus = headingTitle + String(detailItems[i].querySelector("h2.heading-large").innerText.substr(2));
+
+            carInfo.push(headingStatus);
         }
         return carInfo;
     });
