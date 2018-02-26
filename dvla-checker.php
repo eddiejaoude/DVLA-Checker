@@ -171,18 +171,40 @@ function dvlacheck_form_handler()
 
     $scriptResults = explode("\n", $scriptResults);
 
-    $carDetails["activeMOT"] = $scriptResults[1];
-    $carDetails["manufacturer"] = $scriptResults[2];
-    $carDetails["first_registration"] = $scriptResults[3];
-    $carDetails["fuel_type"] = $scriptResults[7];
+    foreach($scriptResults as $scriptResult)
+    {
+        switch (true)
+        {
+            case stristr($scriptResult, 'tax status'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['taxStatus'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'MOT status'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['MOTStatus'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'vehicle make'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['manufacturer'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'first registration'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['firstRegistration'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'fuel type'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['fuelType'] = $itemStatus;
+            break;
+        }
+    }
 
     $postOptions = [
         'post_type' => 'vehicles',
         'meta_input' => array(
             'registration_number' => $regNumber,
-            'manufacturer' => $carDetails["manufacturer"] ?: "N/A",
-            'first_registration' => $carDetails["first_registration"] ?: "N/A",
-            'fuel_type' => $carDetails["fuel_type"] ?: "N/A"
+            'manufacturer' => $carDetails['manufacturer'] ?: 'N/A',
+            'first_registration' => $carDetails['firstRegistration'] ?: 'N/A',
+            'fuel_type' => $carDetails['fuelType'] ?: 'N/A'
         )
     ];
 
