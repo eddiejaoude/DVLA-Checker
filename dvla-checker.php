@@ -101,6 +101,42 @@ function disableTitleSort($columns)
 
 add_filter('manage_edit-vehicles_sortable_columns', 'disableTitleSort');
 
+function customVehiclesInfoContainer()
+{
+    add_meta_box(
+        'vehicle_registration_details_box',
+        __( 'Vehicle Registration Details', 'vehicle_registration_details' ),
+        'customVehicleHTML',
+        'vehicles',
+        'normal'
+    );
+}
+
+add_action('add_meta_boxes', 'customVehiclesInfoContainer');
+
+function customVehicleHTML($post)
+{ ?>
+        
+        <?php 
+            $vehicleProps = get_post_meta($post->ID);
+
+            foreach ($vehicleProps as $title => $vehicleProp):
+        ?>
+        
+        <?php if (stristr($title, '_edit') || stristr($title, '_wp')) continue; ?>
+
+        <?php
+            $title = ucwords($title);
+            $title = str_replace('_', '&nbsp;', $title);
+        ?>
+
+        <h3><?= $title; ?></h3>
+        <p><?= $vehicleProp[0]; ?></p>
+
+        <?php endforeach; ?>
+<?php
+}
+
 function dvlacheck_plugin_basename()
 {
     return plugin_basename(__FILE__);
@@ -195,6 +231,42 @@ function dvlacheck_form_handler()
                 $itemStatus = explode(':', $scriptResult)[1];
                 $carDetails['fuelType'] = $itemStatus;
             break;
+            case stristr($scriptResult, 'year of manufacture'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['manufactureYear'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'cylinder capacity'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['cylinderCapacity'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'emissions'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['CO2Emissions'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'export marker'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['exportMarker'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'vehicle status'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['vehicleStatus'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'colour'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['vehicleColour'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'type approval'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['typeApproval'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'wheelplan'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['wheelplan'] = $itemStatus;
+            break;
+            case stristr($scriptResult, 'revenue weight'):
+                $itemStatus = explode(':', $scriptResult)[1];
+                $carDetails['revenueWeight'] = $itemStatus;
+            break;
         }
     }
 
@@ -204,7 +276,18 @@ function dvlacheck_form_handler()
             'registration_number' => $regNumber,
             'manufacturer' => $carDetails['manufacturer'] ?: 'N/A',
             'first_registration' => $carDetails['firstRegistration'] ?: 'N/A',
-            'fuel_type' => $carDetails['fuelType'] ?: 'N/A'
+            'fuel_type' => $carDetails['fuelType'] ?: 'N/A',
+            'tax_status' => $carDetails['taxStatus'] ?: 'N/A',
+            'mot_status' => $carDetails['MOTStatus'] ?: 'N/A',
+            'manufacture_year' => $carDetails['manufactureYear'] ?: 'N/A',
+            'cylinder_capacity' => $carDetails['cylinderCapacity'] ?: 'N/A',
+            'C02_emissions' => $carDetails['C02Emissions'] ?: 'N/A',
+            'export_marker' => $carDetails['exportMarker'] ?: 'N/A',
+            'vehicle_status' => $carDetails['vehicleStatus'] ?: 'N/A',
+            'vehicle_colour' => $carDetails['vehicleColour'] ?: 'N/A',
+            'type_approval' => $carDetails['typeApproval'] ?: 'N/A',
+            'wheelplan' => $carDetails['wheelplan'] ?: 'N/A',
+            'revenue_weight' => $carDetails['revenueWeight'] ?: 'N/A'
         )
     ];
 
