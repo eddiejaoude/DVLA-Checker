@@ -241,7 +241,7 @@ function dvlacheck_form_handler()
             break;
             case stristr($scriptResult, 'emissions'):
                 $itemStatus = explode(':', $scriptResult)[1];
-                $carDetails['CO2Emissions'] = $itemStatus;
+                $carDetails['C02Emissions'] = $itemStatus;
             break;
             case stristr($scriptResult, 'export marker'):
                 $itemStatus = explode(':', $scriptResult)[1];
