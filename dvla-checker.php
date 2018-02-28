@@ -128,6 +128,7 @@ function customVehicleHTML($post)
         <?php
             $title = ucwords($title);
             $title = str_replace('_', '&nbsp;', $title);
+            $title = preg_replace('/Mot/', 'MOT', $title);
         ?>
 
         <h3><?= $title; ?></h3>
