@@ -201,7 +201,12 @@ function dvlacheck_form_handler()
 {
     if(!isset($_POST['reg_number'])) return;
 
-    $regNumber = $_POST['reg_number'];
+    $regNumber = preg_replace_callback('/([A-Z|a-z|0-9]+)/', function($reg)
+    {
+        $reg = strtoupper($reg[0]);
+        return preg_replace('/^.{4}/', '$0 ', $reg);
+    }, $_POST['reg_number']);
+
     $carDetails = [];
 
     $scriptResults = dvlacheck_retrieve_data($regNumber);
