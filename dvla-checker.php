@@ -203,16 +203,18 @@ function dvlacheck_form_handler()
 
     $regNumber = $_POST['reg_number'];
 
+    if ( !preg_match('/\s/', $regNumber) )
+    {
+        $regNumber = preg_replace('/^.{4}/', '$0 ', $regNumber); 
+    }
+
     if ( strtoupper($_POST['reg_number']) != $_POST['reg_number'] )
     {
         $regNumber = strtoupper($regNumber);
-        if (!preg_match('/\s/', $regNumber))
-        {
-            $regNumber = preg_replace('/^.{4}/', '$0 ', $regNumber);    
-        }
-
-        return $regNumber;
     }
+
+    error_log($regNumber);
+    return;
 
     $carDetails = [];
 
