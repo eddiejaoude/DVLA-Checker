@@ -213,9 +213,6 @@ function dvlacheck_form_handler()
         $regNumber = strtoupper($regNumber);
     }
 
-    error_log($regNumber);
-    return;
-
     $carDetails = [];
 
     $scriptResults = dvlacheck_retrieve_data($regNumber);
