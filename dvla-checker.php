@@ -201,11 +201,18 @@ function dvlacheck_form_handler()
 {
     if(!isset($_POST['reg_number'])) return;
 
-    $regNumber = preg_replace_callback('/([A-Z|a-z|0-9]+)/', function($reg)
+    $regNumber = $_POST['reg_number'];
+
+    if ( strtoupper($_POST['reg_number']) != $_POST['reg_number'] )
     {
-        $reg = strtoupper($reg[0]);
-        return preg_replace('/^.{4}/', '$0 ', $reg);
-    }, $_POST['reg_number']);
+        $regNumber = strtoupper($regNumber);
+        if (!preg_match('/\s/', $regNumber))
+        {
+            $regNumber = preg_replace('/^.{4}/', '$0 ', $regNumber);    
+        }
+
+        return $regNumber;
+    }
 
     $carDetails = [];
 
@@ -297,7 +304,29 @@ function dvlacheck_form_handler()
         )
     ];
 
-    wp_insert_post($postOptions);
+    $args = array(
+        'post_type' => 'vehicles',
+        'post_status' => 'any',
+        'meta_query' => array(
+            array(
+                'key' => 'registration_number',
+                'value' => $regNumber
+            )
+        )
+    );
+
+    $vehicleQuery = new WP_Query($args);
+
+    if ( $vehicleQuery->post_count < 1 )
+    {
+        wp_insert_post($postOptions);
+        return;
+    }
+
+    $vehiclesPosts = $vehiclesQuery->posts;
+    $vehiclePostID = $vehiclesPosts[0]->ID;
+    wp_update_post($vehiclePostID);
+
 }
 
 add_action('init', 'dvlacheck_form_handler');
