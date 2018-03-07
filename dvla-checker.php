@@ -217,6 +217,11 @@ function dvlacheck_form_handler()
 
     $scriptResults = dvlacheck_retrieve_data($regNumber);
 
+    if (!$scriptResults)
+    {
+        return;
+    }
+
     $scriptResults = explode("\n", $scriptResults);
 
     foreach($scriptResults as $scriptResult)

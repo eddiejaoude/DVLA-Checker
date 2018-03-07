@@ -30,6 +30,19 @@ function post_login_callback (status) {
         return;
     }
 
+    var isInvalid = page.evaluate(function ()
+    {
+        var radioBtn = document.getElementById("Correct_True");
+
+        return ( radioBtn !== null && radioBtn.length > 0 ? true : false );
+    });
+
+    if (!isInvalid)
+    {
+        console.log(false);
+        phantom.exit();
+    }
+
     page.evaluate(function () {
         document.getElementById("Correct_True").checked = true;
         document.querySelector('form[action="/ViewVehicle"]').submit();
