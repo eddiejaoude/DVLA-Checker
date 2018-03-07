@@ -327,9 +327,9 @@ function dvlacheck_form_handler()
         return;
     }
 
-    $vehiclesPosts = $vehiclesQuery->posts;
-    $vehiclePostID = $vehiclesPosts[0]->ID;
+    $vehiclePostID = $vehicleQuery->posts[0]->ID;
     $postOptions['ID'] = $vehiclePostID; 
+
     wp_update_post($postOptions);
 
 }
