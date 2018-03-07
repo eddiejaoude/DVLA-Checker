@@ -40,10 +40,6 @@ function post_login_callback (status) {
         else return false;
     });
 
-    console.log(isInvalid);
-    page.render("wut.png");
-    phantom.exit();
-
     if (!isInvalid)
     {
         console.log(false);
