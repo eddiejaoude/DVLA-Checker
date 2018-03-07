@@ -324,8 +324,8 @@ function dvlacheck_form_handler()
 
     $vehiclesPosts = $vehiclesQuery->posts;
     $vehiclePostID = $vehiclesPosts[0]->ID;
-    $args['ID'] = $vehiclePostID; 
-    wp_update_post($args);
+    $postOptions['ID'] = $vehiclePostID; 
+    wp_update_post($postOptions);
 
 }
 
