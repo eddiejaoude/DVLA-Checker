@@ -32,10 +32,17 @@ function post_login_callback (status) {
 
     var isInvalid = page.evaluate(function ()
     {
-        var radioBtn = document.getElementById("Correct_True");
+        if (document.getElementById("Correct_True"))
+        {
+            return true;
+        }
 
-        return ( radioBtn !== null && radioBtn.length > 0 ? true : false );
+        else return false;
     });
+
+    console.log(isInvalid);
+    page.render("wut.png");
+    phantom.exit();
 
     if (!isInvalid)
     {
